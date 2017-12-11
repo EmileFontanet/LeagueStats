@@ -56,6 +56,7 @@ public class Requests {
 		e.printStackTrace();
 
 	  }
+	return null;
 
 	  
 	}
@@ -69,4 +70,15 @@ public class Requests {
 		JSONObject result = makeRequest(request);
 		return result;
 	}
+	public JSONObject getLast20Matches(String accountId, String key) {
+		String request = "https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/" + accountId + "/recent" + "?api_key=" + key;
+		JSONObject result = makeRequest(request);
+		return result;
+	}
+	public JSONObject getSummonerById(String summonerId, String key) {
+		String request = "https://euw1.api.riotgames.com/lol/summoner/v3/summoners/" + summonerId  + "?api_key=" + key;
+		JSONObject result = makeRequest(request);
+		return result;
+	}
+
 }
