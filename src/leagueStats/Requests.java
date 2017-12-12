@@ -16,7 +16,7 @@ import org.json.JSONException;
 
 public class Requests {
 
-	public JSONObject makeRequest(String request ) {
+	public static JSONObject makeRequest(String request ) {
 
 	  try {
 
@@ -37,6 +37,7 @@ public class Requests {
 		StringBuilder sb = new StringBuilder();
 		while ((output = br.readLine()) != null) {
 			sb.append(output);
+			System.out.println(output);
 		}
 		try {
 			JSONObject jsonobj = new JSONObject(sb.toString());
@@ -60,22 +61,22 @@ public class Requests {
 
 	  
 	}
-	public JSONObject getAllLeaguesForSummoner(String summonerId, String key ) {
+	public static JSONObject getAllLeaguesForSummoner(String summonerId, String key ) {
 		String request = "https://euw1.api.riotgames.com/lol/league/v3/positions/by-summoner/" + summonerId + "?api_key=" + key;
 		JSONObject result = makeRequest(request);
 		return result;
 	}
-	public JSONObject getLeagueById(String leagueId, String key ) {
+	public static JSONObject getLeagueById(String leagueId, String key ) {
 		String request = "https://euw1.api.riotgames.com/lol/league/v3/leagues/" + leagueId + "?api_key=" + key;
 		JSONObject result = makeRequest(request);
 		return result;
 	}
-	public JSONObject getLast20Matches(String accountId, String key) {
+	public static JSONObject getLast20Matches(String accountId, String key) {
 		String request = "https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/" + accountId + "/recent" + "?api_key=" + key;
 		JSONObject result = makeRequest(request);
 		return result;
 	}
-	public JSONObject getSummonerById(String summonerId, String key) {
+	public static JSONObject getSummonerById(String summonerId, String key) {
 		String request = "https://euw1.api.riotgames.com/lol/summoner/v3/summoners/" + summonerId  + "?api_key=" + key;
 		JSONObject result = makeRequest(request);
 		return result;
