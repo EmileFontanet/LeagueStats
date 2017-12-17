@@ -37,7 +37,6 @@ public class Requests {
 		StringBuilder sb = new StringBuilder();
 		while ((output = br.readLine()) != null) {
 			sb.append(output);
-			System.out.println(output);
 		}
 		try {
 			JSONObject jsonobj = new JSONObject(sb.toString());
@@ -78,6 +77,28 @@ public class Requests {
 	}
 	public static JSONObject getSummonerById(String summonerId, String key) {
 		String request = "https://euw1.api.riotgames.com/lol/summoner/v3/summoners/" + summonerId  + "?api_key=" + key;
+		JSONObject result = makeRequest(request);
+		return result;
+	}
+	public static JSONObject getSummonerByName(String summonerName, String key) {
+		String request = "https://euw1.api.riotgames.com/lol/summoner/v3/summoners/by-name/" + summonerName  + "?api_key=" + key;
+		JSONObject result = makeRequest(request);
+		return result;
+	}
+	public static JSONObject getLastSoloDuoByAccountId(String accountId, String key){
+		String request = "https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/" + accountId  + "?queue=420&api_key=" + key;
+		JSONObject result = makeRequest(request);
+		return result;
+		
+	}
+	public static JSONObject getLastFlexAccountId(String accountId, String key){
+		String request = "https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/" + accountId  + "?queue=440&api_key=" + key;
+		JSONObject result = makeRequest(request);
+		return result;
+		
+	}
+	public static JSONObject getGameById(long gameId, String key) {
+		String request = "https://euw1.api.riotgames.com/lol/match/v3/matches/" + gameId  + "?queue=440&api_key=" + key;
 		JSONObject result = makeRequest(request);
 		return result;
 	}
