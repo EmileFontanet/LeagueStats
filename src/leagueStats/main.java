@@ -12,22 +12,28 @@ public class main {
 		JSONObject json = Requests.getGameByIdRaw(3473272153L, key);
 		ArrayList<Integer> winningTeam = DataExtracting.getWinningTeam(json);
 		ArrayList<Integer> losingTeam =  DataExtracting.getLosingTeam(json);
-		System.out.println("game brut : " + json);
 		HashMap<ArrayList<Integer>, Integer> trioWinning = new HashMap<ArrayList<Integer>, Integer>();
 		HashMap<ArrayList<Integer>, Integer> trioLosing = new HashMap<ArrayList<Integer>, Integer>();
 		HashMap<ArrayList<Integer>, Integer> quadraWinning = new HashMap<ArrayList<Integer>, Integer>();
 		HashMap<ArrayList<Integer>, Integer> quadraLosing = new HashMap<ArrayList<Integer>, Integer>();
 		HashMap<ArrayList<Integer>, Integer> pentaWinning = new HashMap<ArrayList<Integer>, Integer>();
 		HashMap<ArrayList<Integer>, Integer> pentaLosing = new HashMap<ArrayList<Integer>, Integer>();
-		DataExtracting.addAllCompEntriesTrio(winningTeam, trioWinning);
-		DataExtracting.addAllCompEntriesQuadra(winningTeam, quadraWinning);
-		DataExtracting.addAllCompEntriesPenta(winningTeam, pentaWinning);
-		System.out.println(trioWinning);
-		System.out.println(trioWinning.size());
-		System.out.println(quadraWinning);
-		System.out.println(quadraWinning.size());
-		System.out.println(pentaWinning);
-		System.out.println(pentaWinning.size());
+		ArrayList<Long> accountIds = DataExtracting.getAllAccountIdInAGame(json);
+		System.out.println("game brut : " + json);
+		System.out.println(accountIds);
+		JSONObject gameHisto = Requests.getLastSoloDuoByAccountId("224453580", key);
+		ArrayList<Long>  gamesIds = DataExtracting.getGamesIdForLastDays(gameHisto, 10);
+		System.out.println(gamesIds);
+
+		/*DataExtracting.addAllCompEntriesTrio(losingTeam, trioLosing);
+		DataExtracting.addAllCompEntriesQuadra(losingTeam, quadraLosing);
+		DataExtracting.addAllCompEntriesPenta(losingTeam, pentaLosing);
+		System.out.println(trioLosing);
+		System.out.println(trioLosing.size());
+		System.out.println(quadraLosing);
+		System.out.println(quadraLosing.size());
+		System.out.println(pentaLosing);
+		System.out.println(pentaLosing.size());*/
 		
 		
 	}

@@ -17,13 +17,13 @@ public class DataExtracting {
 		}
 		return 0;
 	}
-	public static ArrayList getGamesIdForLastDays(JSONObject games, int numberOfDays){
+	public static ArrayList getGamesIdForLastDays(JSONObject gamesHistory, int numberOfDays){
 		ArrayList gamesList = new ArrayList();
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		long now =  timestamp.getTime();
 		long lastDateAuthorized = now - numberOfDays * 24*60*60*1000;
 		try {
-			JSONArray jsonarray = games.getJSONArray("matches");
+			JSONArray jsonarray = gamesHistory.getJSONArray("matches");
 			for(int i = 0; i < jsonarray.length(); i++) {
 				JSONObject jsonobj = jsonarray.getJSONObject(i);
 				long gameDate = jsonobj.optLong("timestamp");
@@ -31,6 +31,7 @@ public class DataExtracting {
 					gamesList.add(jsonobj.opt("gameId"));
 				}
 			}
+			gamesList.sort(null);
 			return gamesList;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -56,6 +57,21 @@ public class DataExtracting {
 		}
 
 		return winningTeam;
+	}
+	public static ArrayList<Long> getAllAccountIdInAGame(JSONObject game){
+		ArrayList<Long> accountIds = new ArrayList<Long>();
+		try {
+			JSONArray participants = game.getJSONArray("participantIdentities");
+			for(int i = 0; i < 10; i++){
+				JSONObject playertemp =  (JSONObject) participants.get(i);
+				JSONObject player = (JSONObject) playertemp.get("player");
+				accountIds.add(player.getLong("currentAccountId"));
+			}
+			return accountIds;
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return accountIds;
 	}
 	public static ArrayList<Integer> getLosingTeam(JSONObject game){
 		ArrayList<Integer> losingTeam = new ArrayList<Integer>();
@@ -135,4 +151,5 @@ public class DataExtracting {
 			}
 		}
 	}
+
 }
