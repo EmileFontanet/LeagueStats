@@ -8,10 +8,15 @@ import java.sql.Array;
 import java.util.ArrayList;
 public class main {
 	public static void main(String [] args ) {
-		JSONObject json = new JSONObject();
-		json = Requests.getLastSoloDuoByAccountId("39752045", "RGAPI-2a4c6a46-fcc4-43c4-b1c4-4c4cc0cbb775");
-		ArrayList gameIds = DataExtracting.getGamesIdForLastDays(json, 4);
-		System.out.println(gameIds);
+		//JSONObject json = new JSONObject();
+		String key = "RGAPI-a42626df-c721-4047-8640-8fdc9e8601d1";
+		JSONObject json = Requests.getGameByIdRaw(3473272153L, key);
+		ArrayList<Integer> winningTeam = DataExtracting.getWinningTeam(json);
+		ArrayList<Integer> losingTeam =  DataExtracting.getLosingTeam(json);
+		System.out.println(json);
+		System.out.println(winningTeam);
+		System.out.println(losingTeam);
+
 		
 		
 	}

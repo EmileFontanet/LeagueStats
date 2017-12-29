@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import java.sql.Timestamp;
 import org.json.JSONException;
+import java.util.HashMap;
+
 public class DataExtracting {
 	public static int getSummonnerAccountByName(JSONObject summoner) {
 		try {
@@ -36,5 +38,39 @@ public class DataExtracting {
 		
 		return gamesList;
 	}
+	public static ArrayList<Integer> getWinningTeam(JSONObject game){
+		ArrayList<Integer> winningTeam = new ArrayList<Integer>();
+		try {
+			JSONObject participants = game.getJSONObject("participants");
+			for(int i = 0; i < 10; i++){
+				String id = Integer.toString(i);
+				if (participants.getJSONObject(id).getJSONObject("stats").getBoolean("win")){
+					winningTeam.add(participants.getJSONObject(id).getInt("championId"));
+				}
+			}
+			return winningTeam;
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 
+		return winningTeam;
+	}
+
+	public static ArrayList<Integer> getLosingTeam(JSONObject game){
+		ArrayList<Integer> winningTeam = new ArrayList<Integer>();
+		try {
+			JSONObject participants = game.getJSONObject("participants");
+			for(int i = 0; i < 10; i++){
+				String id = Integer.toString(i);
+				if (!participants.getJSONObject(id).getJSONObject("stats").getBoolean("win")){
+					winningTeam.add(participants.getJSONObject(id).getInt("championId"));
+				}
+			}
+			return winningTeam;
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+
+		return winningTeam;
+	}
 }

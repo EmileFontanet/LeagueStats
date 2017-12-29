@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import org.json.JSONString;
 import org.json.JSONStringer;
 import org.json.JSONException;
-
 public class Requests {
 
 	public static JSONObject makeRequest(String request ) {
@@ -91,13 +90,13 @@ public class Requests {
 		return result;
 		
 	}
-	public static JSONObject getLastFlexAccountId(String accountId, String key){
+	public static JSONObject getLastFlexByAccountId(String accountId, String key){
 		String request = "https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/" + accountId  + "?queue=440&api_key=" + key;
 		JSONObject result = makeRequest(request);
 		return result;
 		
 	}
-	public static JSONObject getGameById(long gameId, String key) {
+	public static JSONObject getGameByIdRaw(long gameId, String key) {
 		String request = "https://euw1.api.riotgames.com/lol/match/v3/matches/" + gameId  + "?queue=440&api_key=" + key;
 		JSONObject result = makeRequest(request);
 		return result;
