@@ -41,13 +41,14 @@ public class DataExtracting {
 	public static ArrayList<Integer> getWinningTeam(JSONObject game){
 		ArrayList<Integer> winningTeam = new ArrayList<Integer>();
 		try {
-			JSONObject participants = game.getJSONObject("participants");
+			JSONArray participants = game.getJSONArray("participants");		
 			for(int i = 0; i < 10; i++){
-				String id = Integer.toString(i);
-				if (participants.getJSONObject(id).getJSONObject("stats").getBoolean("win")){
-					winningTeam.add(participants.getJSONObject(id).getInt("championId"));
+				JSONObject player =  (JSONObject) participants.get(i);
+				if (player.getJSONObject("stats").getBoolean("win")){
+					winningTeam.add(player.getInt("championId"));
 				}
 			}
+			winningTeam.sort(null);
 			return winningTeam;
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -55,22 +56,24 @@ public class DataExtracting {
 
 		return winningTeam;
 	}
-
+	
 	public static ArrayList<Integer> getLosingTeam(JSONObject game){
-		ArrayList<Integer> winningTeam = new ArrayList<Integer>();
+		ArrayList<Integer> losingTeam = new ArrayList<Integer>();
 		try {
-			JSONObject participants = game.getJSONObject("participants");
+			JSONArray participants = game.getJSONArray("participants");		
 			for(int i = 0; i < 10; i++){
-				String id = Integer.toString(i);
-				if (!participants.getJSONObject(id).getJSONObject("stats").getBoolean("win")){
-					winningTeam.add(participants.getJSONObject(id).getInt("championId"));
+				JSONObject player =  (JSONObject) participants.get(i);
+				if (!player.getJSONObject("stats").getBoolean("win")){
+					losingTeam.add(player.getInt("championId"));
 				}
 			}
-			return winningTeam;
+			losingTeam.sort(null);
+			return losingTeam;
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
-		return winningTeam;
+		return losingTeam;
 	}
+
 }
