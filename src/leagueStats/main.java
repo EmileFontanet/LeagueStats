@@ -6,35 +6,69 @@ import org.json.JSONException;
 import java.util.HashMap;
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import org.apache.commons.lang3.ArrayUtils;
 public class main {
 	public static void main(String [] args ) {
+		//Predef variables used for the storing of datas or the requests
 		String key = "RGAPI-424c6995-9201-4e7c-9047-1b5ac512fb36";
-		JSONObject json = Requests.getGameByIdRaw(3473272153L, key);
-		ArrayList<Integer> winningTeam = DataExtracting.getWinningTeam(json);
-		ArrayList<Integer> losingTeam =  DataExtracting.getLosingTeam(json);
+		long startingAccountId = 35570648L;
+		int numberOfDaysToAnalyze = 10;
+		ArrayList<Long> usedGameIds= new ArrayList<>();
+		ArrayList<Long> usedAccountIds= new ArrayList<>();
+		ArrayList<Long> gameIdsToUse= new ArrayList<>();
+		ArrayList<Long> accountIdsToUse= new ArrayList<>();
+		accountIdsToUse.add(startingAccountId);
 		HashMap<ArrayList<Integer>, Integer> trioWinning = new HashMap<ArrayList<Integer>, Integer>();
 		HashMap<ArrayList<Integer>, Integer> trioLosing = new HashMap<ArrayList<Integer>, Integer>();
 		HashMap<ArrayList<Integer>, Integer> quadraWinning = new HashMap<ArrayList<Integer>, Integer>();
 		HashMap<ArrayList<Integer>, Integer> quadraLosing = new HashMap<ArrayList<Integer>, Integer>();
 		HashMap<ArrayList<Integer>, Integer> pentaWinning = new HashMap<ArrayList<Integer>, Integer>();
 		HashMap<ArrayList<Integer>, Integer> pentaLosing = new HashMap<ArrayList<Integer>, Integer>();
-		ArrayList<Long> accountIds = DataExtracting.getAllAccountIdInAGame(json);
-		System.out.println("game brut : " + json);
-		System.out.println(accountIds);
-		JSONObject gameHisto = Requests.getLastSoloDuoByAccountId("224453580", key);
-		ArrayList<Long>  gamesIds = DataExtracting.getGamesIdForLastDays(gameHisto, 10);
-		System.out.println(gamesIds);
+		System.out.println(gameIdsToUse);
 
-		/*DataExtracting.addAllCompEntriesTrio(losingTeam, trioLosing);
-		DataExtracting.addAllCompEntriesQuadra(losingTeam, quadraLosing);
-		DataExtracting.addAllCompEntriesPenta(losingTeam, pentaLosing);
-		System.out.println(trioLosing);
-		System.out.println(trioLosing.size());
-		System.out.println(quadraLosing);
-		System.out.println(quadraLosing.size());
-		System.out.println(pentaLosing);
-		System.out.println(pentaLosing.size());*/
-		
+		//Begin of the algorithm to get the stats
+		int i = 0;
+		while(i  < accountIdsToUse.size()) {// liste sur tous les account id a utiliser
+			JSONObject gameHistoFlex = Requests.getLastFlexByAccountId(accountIdsToUse.get(i), key);
+			JSONObject gameHistoSoloDuo = Requests.getLastSoloDuoByAccountId(accountIdsToUse.get(i), key);
+			ArrayList<Long> flexGameIds = DataExtracting.getGamesIdForLastDays(gameHistoFlex, numberOfDaysToAnalyze);
+			ArrayList<Long> soloDuoGameIds = DataExtracting.getGamesIdForLastDays(gameHistoSoloDuo, numberOfDaysToAnalyze);
+			ArrayList<Long> gameIds = new ArrayList<>();
+			gameIds.addAll(flexGameIds);
+			gameIds.addAll(soloDuoGameIds);
+			for(int ite = 0; ite < gameIds.size(); ite ++){
+				if(!usedGameIds.contains(gameIds.get(ite))){//si la game n'a jamais été utilisée
+					gameIdsToUse.add(gameIds.get(ite));
+					usedGameIds.add(gameIds.get(ite));
+				}
+			}
+			int gamesIterator = 0;
+			while(gamesIterator < gameIdsToUse.size()){// on fait maitenant la boucle sur toute l'array
+				//contenant tous les ids de game a utiliser jusqu'a les avoir tous utilisés
+				JSONObject gameTemp = Requests.getGameByIdRaw(gameIdsToUse.get(gamesIterator), key);
+				ArrayList<Integer> winningTeamTemp = DataExtracting.getWinningTeam(gameTemp);
+				ArrayList<Integer> losingTeamTemp = DataExtracting.getLosingTeam(gameTemp);
+				DataExtracting.addAllCompEntriesTrio(winningTeamTemp, trioWinning);
+				DataExtracting.addAllCompEntriesTrio(losingTeamTemp, trioLosing);
+				DataExtracting.addAllCompEntriesQuadra(winningTeamTemp, quadraWinning);
+				DataExtracting.addAllCompEntriesQuadra(losingTeamTemp, quadraLosing);
+				DataExtracting.addAllCompEntriesPenta(winningTeamTemp, pentaWinning);
+				DataExtracting.addAllCompEntriesPenta(losingTeamTemp, pentaLosing);
+
+				ArrayList<Long> accountIdsTemp = DataExtracting.getAllAccountIdInAGame(gameTemp);
+				for(int ite = 0; ite < accountIdsTemp.size(); ite ++){
+					if(!usedAccountIds.contains(accountIdsTemp.get(ite))){
+						accountIdsToUse.add(accountIdsTemp.get(ite));
+						usedAccountIds.add(accountIdsTemp.get(ite));
+					}
+				}
+
+				gamesIterator++;
+			}
+			gameIdsToUse.clear();
+			i++;
+		}
 		
 	}
 }

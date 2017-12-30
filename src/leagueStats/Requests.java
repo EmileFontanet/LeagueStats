@@ -69,7 +69,7 @@ public class Requests {
 		JSONObject result = makeRequest(request);
 		return result;
 	}
-	public static JSONObject getLast20Matches(String accountId, String key) {
+	public static JSONObject getLast20Matches(long accountId, String key) {
 		String request = "https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/" + accountId + "/recent" + "?api_key=" + key;
 		JSONObject result = makeRequest(request);
 		return result;
@@ -84,13 +84,13 @@ public class Requests {
 		JSONObject result = makeRequest(request);
 		return result;
 	}
-	public static JSONObject getLastSoloDuoByAccountId(String accountId, String key){
+	public static JSONObject getLastSoloDuoByAccountId(long accountId, String key){
 		String request = "https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/" + accountId  + "?queue=420&api_key=" + key;
 		JSONObject result = makeRequest(request);
 		return result;
 		
 	}
-	public static JSONObject getLastFlexByAccountId(String accountId, String key){
+	public static JSONObject getLastFlexByAccountId(long accountId, String key){
 		String request = "https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/" + accountId  + "?queue=440&api_key=" + key;
 		JSONObject result = makeRequest(request);
 		return result;
