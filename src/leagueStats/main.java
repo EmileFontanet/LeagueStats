@@ -1,13 +1,11 @@
 package leagueStats;
 
 import org.json.JSONObject;
-import org.json.JSONArray;
-import org.json.JSONException;
+
 import java.util.HashMap;
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import org.apache.commons.lang3.ArrayUtils;
+import java.util.LinkedHashMap;
+
 public class main {
 	public static void main(String [] args ) {
 		//Predef variables used for the storing of datas or the requests
@@ -25,11 +23,11 @@ public class main {
 		HashMap<ArrayList<Integer>, Integer> quadraLosing = new HashMap<ArrayList<Integer>, Integer>();
 		HashMap<ArrayList<Integer>, Integer> pentaWinning = new HashMap<ArrayList<Integer>, Integer>();
 		HashMap<ArrayList<Integer>, Integer> pentaLosing = new HashMap<ArrayList<Integer>, Integer>();
-		System.out.println(gameIdsToUse);
 
 		//Begin of the algorithm to get the stats
 		int i = 0;
-		while(i  < accountIdsToUse.size()) {// liste sur tous les account id a utiliser
+
+		while(i  < accountIdsToUse.size() && Requests.totalNumberOfRequests<50) {// liste sur tous les account id a utiliser
 			JSONObject gameHistoFlex = Requests.getLastFlexByAccountId(accountIdsToUse.get(i), key);
 			JSONObject gameHistoSoloDuo = Requests.getLastSoloDuoByAccountId(accountIdsToUse.get(i), key);
 			ArrayList<Long> flexGameIds = DataExtracting.getGamesIdForLastDays(gameHistoFlex, numberOfDaysToAnalyze);
@@ -69,6 +67,16 @@ public class main {
 			gameIdsToUse.clear();
 			i++;
 		}
-		
+		HashMap<ArrayList<Integer>, Float> winrateTrio = DataExtracting.getWinrateMap(trioWinning, trioLosing);
+		HashMap<ArrayList<Integer>, Float> winrateQuadra = DataExtracting.getWinrateMap(quadraWinning, quadraLosing);
+		HashMap<ArrayList<Integer>, Float> winratePenta = DataExtracting.getWinrateMap(pentaWinning, pentaLosing);
+		LinkedHashMap<ArrayList<Integer>, Float> sortedWinrateTrio = DataExtracting.sortHashMapByValues(winrateTrio);
+		LinkedHashMap<ArrayList<Integer>, Float> sortedWinrateQuadra = DataExtracting.sortHashMapByValues(winrateQuadra);
+		LinkedHashMap<ArrayList<Integer>, Float> sortedWinratePenta = DataExtracting.sortHashMapByValues(winratePenta);
+
+		System.out.println(sortedWinrateTrio);
+		System.out.println(sortedWinrateQuadra);
+		System.out.println(sortedWinratePenta);
+
 	}
 }

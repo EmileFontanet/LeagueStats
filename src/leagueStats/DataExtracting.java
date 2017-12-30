@@ -1,11 +1,9 @@
 package leagueStats;
 import org.json.JSONObject;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import org.json.JSONArray;
 import java.sql.Timestamp;
 import org.json.JSONException;
-import java.util.HashMap;
 
 public class DataExtracting {
 	public static int getSummonnerAccountByName(JSONObject summoner) {
@@ -151,5 +149,61 @@ public class DataExtracting {
 			}
 		}
 	}
+	public static LinkedHashMap<ArrayList<Integer>, Float> sortHashMapByValues(
+			HashMap<ArrayList<Integer>, Float> passedMap) {
+		List<ArrayList<Integer>> mapKeys = new ArrayList<>(passedMap.keySet());
+		List<Float> mapValues = new ArrayList<>(passedMap.values());
+		Collections.sort(mapValues, Collections.reverseOrder());
+		//Collections.sort(mapKeys);
 
+		LinkedHashMap<ArrayList<Integer>, Float> sortedMap =
+				new LinkedHashMap<>();
+
+		Iterator<Float> valueIt = mapValues.iterator();
+		while (valueIt.hasNext()) {
+			float val = valueIt.next();
+			Iterator<ArrayList<Integer>> keyIt = mapKeys.iterator();
+
+			while (keyIt.hasNext()) {
+				ArrayList<Integer> key = keyIt.next();
+				float comp1 = passedMap.get(key);
+				float comp2 = val;
+
+				if (comp1==comp2) {
+					keyIt.remove();
+					sortedMap.put(key, val);
+					break;
+				}
+			}
+		}
+		return sortedMap;
+	}
+	public static HashMap<ArrayList<Integer>, Float> getWinrateMap (HashMap<ArrayList<Integer>, Integer> winMap, HashMap<ArrayList<Integer>, Integer> loseMap){
+		HashMap<ArrayList<Integer>, Float> winrateMap = new HashMap<>();
+		for(HashMap.Entry<ArrayList<Integer>, Integer> entry : winMap.entrySet()){
+			ArrayList<Integer> key = entry.getKey();
+			if(!winrateMap.containsKey(key)){
+				if(loseMap.containsKey(key)){
+					float winrate = winMap.get(key) / (winMap.get(key) + loseMap.get(key));
+					winrateMap.put(key, winrate);
+				}
+				else{
+					winrateMap.put(key, 1f);
+				}
+			}
+		}
+		for(HashMap.Entry<ArrayList<Integer>, Integer> entry : loseMap.entrySet()){
+			ArrayList<Integer> key = entry.getKey();
+			if(!winrateMap.containsKey(key)){
+				if(winMap.containsKey(key)){
+					float winrate = winMap.get(key) / (winMap.get(key) + loseMap.get(key));
+					winrateMap.put(key, winrate);
+				}
+				else{
+					winrateMap.put(key, 0f);
+				}
+			}
+		}
+		return winrateMap;
+	}
 }

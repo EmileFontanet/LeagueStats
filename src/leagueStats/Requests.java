@@ -14,9 +14,10 @@ import org.json.JSONString;
 import org.json.JSONStringer;
 import org.json.JSONException;
 public class Requests {
-
+	public static int totalNumberOfRequests = 0;
 	public static JSONObject makeRequest(String request ) {
-
+		Requests.totalNumberOfRequests++;
+		System.out.println(totalNumberOfRequests);
 	  try {
 
 		URL url = new URL(request);
